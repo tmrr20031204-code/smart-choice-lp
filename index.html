@@ -1,0 +1,757 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SmartChoice | 良いものを、適正価格で。</title>
+    <meta name="description" content="AIが相場を分析し、見積もり・契約・価格交渉までサポート。SmartChoiceは適正価格での買い物を支援するAI意思決定サポートプラットフォームです。">
+    
+    <!-- OpenGraph / Twitter Card -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="SmartChoice | 良いものを、適正価格で。">
+    <meta property="og:description" content="AIが相場を分析し、見積もり・契約・価格交渉までサポート。">
+    <meta name="twitter:card" content="summary_large_image">
+    <link rel="canonical" href="https://example.com/">
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#2563EB',
+                        secondary: '#4F46E5',
+                        success: '#10B981',
+                        warning: '#F59E0B',
+                        danger: '#EF4444',
+                        text: '#0F172A',
+                        bg: '#FFFFFF',
+                        section: '#F8FAFC'
+                    },
+                    fontFamily: {
+                        sans: ['"Noto Sans JP"', 'system-ui', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <!-- Schema.org JSON-LD -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      "name": "SmartChoice",
+      "applicationCategory": "BusinessApplication",
+      "offers": {
+        "@type": "Offer",
+        "price": "0"
+      },
+      "description": "AIが相場を分析し、見積もり・契約・価格交渉までサポートします。"
+    }
+    </script>
+
+    <style>
+        html { scroll-behavior: smooth; }
+        body { font-family: 'Noto Sans JP', sans-serif; color: #0F172A; background-color: #FFFFFF; }
+        .glass { background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-bottom: 1px solid rgba(226, 232, 240, 0.6); }
+        
+        /* Animations */
+        @media (prefers-reduced-motion: no-preference) {
+            .fade-up { opacity: 0; transform: translateY(24px); transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1), transform 0.7s cubic-bezier(0.16, 1, 0.3, 1); }
+            .fade-up.visible { opacity: 1; transform: translateY(0); }
+            .fade-in { opacity: 0; transition: opacity 0.7s ease-out; }
+            .fade-in.visible { opacity: 1; }
+        }
+        
+        /* Custom Utilities */
+        .premium-shadow { box-shadow: 0 20px 40px -15px rgba(0,0,0,0.05); }
+        .text-gradient { background: linear-gradient(to right, #2563EB, #4F46E5); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        
+        /* Toast */
+        #toast { transition: opacity 0.3s, transform 0.3s; transform: translateY(100%); opacity: 0; }
+        #toast.show { transform: translateY(0); opacity: 1; }
+    </style>
+</head>
+<body class="antialiased selection:bg-primary selection:text-white">
+
+    <!-- 1 Navigation -->
+    <nav class="fixed w-full z-50 glass transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center space-x-2">
+                    <a href="#" class="text-xl font-bold tracking-tight text-primary hover:text-blue-800 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded">SmartChoice</a>
+                </div>
+                <div class="hidden md:flex space-x-8">
+                    <a href="#how-it-works" class="text-sm font-medium text-gray-600 hover:text-primary transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded">仕組み</a>
+                    <a href="#philosophy" class="text-sm font-medium text-gray-600 hover:text-primary transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded">理念</a>
+                    <a href="#faq" class="text-sm font-medium text-gray-600 hover:text-primary transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded">FAQ</a>
+                </div>
+                <div class="hidden md:flex">
+                    <a href="https://smart-choice.onrender.com/" target="_blank" class="inline-flex items-center justify-center px-5 py-2 border border-transparent text-sm font-medium rounded-full text-white bg-primary hover:bg-secondary focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-primary transition shadow-sm hover:shadow-md">
+                        無料で試してみる
+                    </a>
+                </div>
+                <!-- Universal Menu button -->
+                <div class="flex items-center ml-2 md:ml-4">
+                    <button id="menu-btn" class="text-gray-600 hover:text-gray-900 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded p-1 transition-colors" aria-label="メニューを開く">
+                        <i data-lucide="menu" class="w-6 h-6"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 2 Hero -->
+    <section class="pt-32 pb-20 lg:pt-40 lg:pb-28 overflow-hidden bg-section relative">
+        <div class="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpcmNsZSBjeD0iMiIgY3k9IjIiIHI9IjIiIGZpbGw9IiNFMkU4RjAiLz48L3N2Zz4=')] [mask-image:linear-gradient(to_bottom,white,transparent)] opacity-50"></div>
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="lg:grid lg:grid-cols-12 lg:gap-16 items-center">
+                <div class="lg:col-span-6 text-center lg:text-left fade-up">
+                    <h1 class="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-gray-900 leading-tight mb-6">
+                        <span class="block">良いものを、</span>
+                        <span class="block text-gradient">適正価格で。</span>
+                    </h1>
+                    <p class="mt-4 text-lg sm:text-xl text-gray-600 mb-8 leading-relaxed max-w-2xl mx-auto lg:mx-0">
+                        AIが相場を分析し、見積もり・契約・価格交渉までサポート。<br>
+                        もう、「知らなかった」で損をしない。
+                    </p>
+                    <div class="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
+                        <a href="https://smart-choice.onrender.com/" target="_blank" class="inline-flex items-center justify-center px-8 py-3.5 border border-transparent text-base font-medium rounded-full text-white bg-primary hover:bg-secondary shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-primary">
+                            無料で試してみる
+                        </a>
+                        <a href="#how-it-works" class="inline-flex items-center justify-center px-8 py-3.5 border border-gray-300 text-base font-medium rounded-full text-gray-700 bg-white hover:bg-gray-50 shadow-sm hover:shadow-md transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-gray-500">
+                            使い方を見る
+                        </a>
+                    </div>
+                    <p class="mt-4 text-[11px] text-gray-400 text-center lg:text-left">※システムの都合上、アプリの起動までに10～20秒ほどかかる場合がございます。</p>
+                </div>
+                <div class="lg:col-span-6 mt-16 lg:mt-0 fade-up" style="transition-delay: 200ms;">
+                    <!-- Premium Smartphone Mockup (HTML Only) -->
+                    <div class="relative mx-auto w-[320px] h-[640px] bg-white rounded-[50px] shadow-2xl border-[12px] border-gray-900 overflow-hidden flex flex-col transform lg:rotate-[-2deg] hover:rotate-0 transition-transform duration-500" aria-label="アプリ画面のプレビュー">
+                        <!-- Notch -->
+                        <div class="absolute top-0 inset-x-0 h-7 bg-gray-900 rounded-b-3xl w-40 mx-auto z-20"></div>
+                        <!-- App Header -->
+                        <div class="bg-white pt-12 pb-4 px-6 border-b border-gray-100 flex justify-center items-center">
+                            <span class="text-lg font-bold text-gray-900">見積もり分析</span>
+                        </div>
+                        <!-- App Content -->
+                        <div class="flex-1 p-5 bg-gray-50 overflow-y-auto space-y-4">
+                            <!-- Badge -->
+                            <div class="bg-red-50 border border-red-100 p-4 rounded-2xl flex items-center space-x-3">
+                                <div class="bg-red-100 p-2 rounded-full text-danger">
+                                    <i data-lucide="alert-triangle" class="w-5 h-5"></i>
+                                </div>
+                                <div>
+                                    <span class="block font-bold text-danger text-sm">やや割高（要確認）</span>
+                                    <span class="block text-xs text-gray-600 mt-0.5">総額: 約15万円 (相場: 10〜12万円)</span>
+                                </div>
+                            </div>
+                            <!-- Item Breakdown -->
+                            <div class="bg-white p-4 rounded-2xl shadow-sm border border-gray-100 space-y-3">
+                                <h4 class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">内訳チェック</h4>
+                                <div class="flex justify-between items-center text-sm border-b border-gray-50 pb-2">
+                                    <span class="text-gray-700 font-medium">基本工賃</span>
+                                    <span class="text-success font-semibold text-xs bg-green-50 px-2 py-1 rounded text-center min-w-[70px]">相場通り</span>
+                                </div>
+                                <div class="flex justify-between items-center text-sm border-b border-gray-50 pb-2">
+                                    <span class="text-gray-700 font-medium">部品代A</span>
+                                    <span class="text-warning font-semibold text-xs bg-yellow-50 px-2 py-1 rounded text-center min-w-[70px]">やや割高</span>
+                                </div>
+                                <div class="flex justify-between items-center text-sm">
+                                    <span class="text-gray-700 font-medium">特殊コーティング</span>
+                                    <span class="text-danger font-semibold text-xs bg-red-50 px-2 py-1 rounded text-center min-w-[70px]">削除推奨</span>
+                                </div>
+                            </div>
+                            <!-- Negotiation Script -->
+                            <div class="bg-white p-4 rounded-2xl shadow-sm border border-primary/20 relative">
+                                <div class="flex items-center space-x-1.5 mb-2">
+                                    <i data-lucide="message-square" class="w-4 h-4 text-primary"></i>
+                                    <h4 class="text-xs font-bold text-primary">AI交渉文案</h4>
+                                </div>
+                                <p class="text-sm text-gray-700 mb-4 bg-gray-50 p-3 rounded-xl border border-gray-100 leading-relaxed">
+                                    「見積もりありがとうございます。特殊コーティングを外した場合、おいくらになりますでしょうか？」
+                                </p>
+                                <button class="copy-btn w-full bg-primary text-white text-sm font-medium py-2.5 rounded-xl shadow-sm hover:bg-secondary transition flex items-center justify-center space-x-2 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-primary" data-clipboard-text="見積もりありがとうございます。特殊コーティングを外した場合、おいくらになりますでしょうか？" aria-label="テキストをコピーする">
+                                    <i data-lucide="copy" class="w-4 h-4"></i>
+                                    <span>コピーして送信</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 3 Problem -->
+    <section class="py-24 bg-white" id="problem">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto mb-16 fade-up">
+                <h2 class="text-3xl font-bold text-gray-900 mb-6">なぜ、高額な買い物で<br class="sm:hidden">後悔してしまうのか？</h2>
+                <p class="text-lg text-gray-600 leading-relaxed">
+                    専門用語が並ぶ見積書、相場がわからない不安、断りにくい雰囲気。<br>
+                    失敗する理由は「判断力」ではなく、「情報格差」です。
+                </p>
+            </div>
+            
+            <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4 md:gap-6 fade-up" style="transition-delay: 100ms;">
+                <div class="bg-gray-50 rounded-2xl p-6 text-center border border-gray-100 hover:border-gray-200 hover:shadow-md transition-all">
+                    <i data-lucide="home" class="w-8 h-8 mx-auto text-gray-400 mb-3" aria-hidden="true"></i>
+                    <span class="text-sm font-medium text-gray-700">外壁塗装</span>
+                </div>
+                <div class="bg-gray-50 rounded-2xl p-6 text-center border border-gray-100 hover:border-gray-200 hover:shadow-md transition-all">
+                    <i data-lucide="hammer" class="w-8 h-8 mx-auto text-gray-400 mb-3" aria-hidden="true"></i>
+                    <span class="text-sm font-medium text-gray-700">リフォーム</span>
+                </div>
+                <div class="bg-gray-50 rounded-2xl p-6 text-center border border-gray-100 hover:border-gray-200 hover:shadow-md transition-all">
+                    <i data-lucide="shield" class="w-8 h-8 mx-auto text-gray-400 mb-3" aria-hidden="true"></i>
+                    <span class="text-sm font-medium text-gray-700">保険</span>
+                </div>
+                <div class="bg-gray-50 rounded-2xl p-6 text-center border border-gray-100 hover:border-gray-200 hover:shadow-md transition-all">
+                    <i data-lucide="car" class="w-8 h-8 mx-auto text-gray-400 mb-3" aria-hidden="true"></i>
+                    <span class="text-sm font-medium text-gray-700">車検</span>
+                </div>
+                <div class="bg-gray-50 rounded-2xl p-6 text-center border border-gray-100 hover:border-gray-200 hover:shadow-md transition-all hidden lg:block">
+                    <i data-lucide="sofa" class="w-8 h-8 mx-auto text-gray-400 mb-3" aria-hidden="true"></i>
+                    <span class="text-sm font-medium text-gray-700">家具</span>
+                </div>
+                <div class="bg-gray-50 rounded-2xl p-6 text-center border border-gray-100 hover:border-gray-200 hover:shadow-md transition-all hidden lg:block">
+                    <i data-lucide="monitor" class="w-8 h-8 mx-auto text-gray-400 mb-3" aria-hidden="true"></i>
+                    <span class="text-sm font-medium text-gray-700">家電</span>
+                </div>
+                <div class="bg-gray-50 rounded-2xl p-6 text-center border border-gray-100 hover:border-gray-200 hover:shadow-md transition-all hidden lg:block">
+                    <i data-lucide="key" class="w-8 h-8 mx-auto text-gray-400 mb-3" aria-hidden="true"></i>
+                    <span class="text-sm font-medium text-gray-700">中古車</span>
+                </div>
+                <div class="bg-gray-50 rounded-2xl p-6 text-center border border-gray-100 hover:border-gray-200 hover:shadow-md transition-all hidden lg:block">
+                    <i data-lucide="truck" class="w-8 h-8 mx-auto text-gray-400 mb-3" aria-hidden="true"></i>
+                    <span class="text-sm font-medium text-gray-700">引越し</span>
+                </div>
+                <div class="bg-gray-50 rounded-2xl p-6 text-center border border-gray-100 hover:border-gray-200 hover:shadow-md transition-all hidden lg:block">
+                    <i data-lucide="sun" class="w-8 h-8 mx-auto text-gray-400 mb-3" aria-hidden="true"></i>
+                    <span class="text-sm font-medium text-gray-700">太陽光</span>
+                </div>
+                <div class="bg-gray-50 rounded-2xl p-6 text-center border border-gray-100 hover:border-gray-200 hover:shadow-md transition-all hidden lg:block">
+                    <i data-lucide="wifi" class="w-8 h-8 mx-auto text-gray-400 mb-3" aria-hidden="true"></i>
+                    <span class="text-sm font-medium text-gray-700">ネット回線</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 4 How It Works -->
+    <section class="py-24 bg-section" id="how-it-works">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16 fade-up">
+                <h2 class="text-3xl font-bold text-gray-900 mb-4">使い方は驚くほどシンプル。</h2>
+                <p class="text-lg text-gray-600">3つのステップで、AIがあなたをサポートします。</p>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-8">
+                <!-- Step 1 -->
+                <div class="bg-white rounded-3xl p-8 premium-shadow border border-gray-100 fade-up" style="transition-delay: 100ms;">
+                    <div class="w-12 h-12 bg-blue-50 rounded-2xl flex items-center justify-center text-primary font-bold text-xl mb-6">1</div>
+                    <h3 class="text-xl font-bold text-gray-900 mb-3">見積書や画像をアップロード</h3>
+                    <p class="text-gray-600 mb-8 leading-relaxed">見積書やレシートの写真、商品のスクリーンショットなど、価格が分かる画像なら何でも解析可能です。また、テキストで情報を補足することもできます。</p>
+                    
+                    <div class="bg-gray-50 rounded-xl p-4 border border-dashed border-gray-300 text-center relative overflow-hidden group">
+                        <i data-lucide="upload-cloud" class="w-8 h-8 mx-auto text-gray-400 mb-2 group-hover:text-primary transition-colors"></i>
+                        <span class="text-sm text-gray-500">タップしてファイルを選択</span>
+                    </div>
+                </div>
+
+                <!-- Step 2 -->
+                <div class="bg-white rounded-3xl p-8 premium-shadow border border-gray-100 fade-up" style="transition-delay: 200ms;">
+                    <div class="w-12 h-12 bg-blue-50 rounded-2xl flex items-center justify-center text-primary font-bold text-xl mb-6">2</div>
+                    <h3 class="text-xl font-bold text-gray-900 mb-3">AIが即座に解析</h3>
+                    <p class="text-gray-600 mb-8 leading-relaxed">適正価格、不要な項目、相場との比較を分かりやすく箇条書きで提示します。</p>
+                    
+                    <div class="space-y-2">
+                        <div class="bg-green-50 p-3 rounded-lg border border-green-100 flex items-center">
+                            <i data-lucide="check-circle-2" class="w-4 h-4 text-success mr-2"></i>
+                            <span class="text-sm font-medium text-gray-800">基本作業費は適正</span>
+                        </div>
+                        <div class="bg-red-50 p-3 rounded-lg border border-red-100 flex items-center">
+                            <i data-lucide="x-circle" class="w-4 h-4 text-danger mr-2"></i>
+                            <span class="text-sm font-medium text-gray-800">オプションBは不要</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 3 -->
+                <div class="bg-white rounded-3xl p-8 premium-shadow border border-gray-100 fade-up" style="transition-delay: 300ms;">
+                    <div class="w-12 h-12 bg-blue-50 rounded-2xl flex items-center justify-center text-primary font-bold text-xl mb-6">3</div>
+                    <h3 class="text-xl font-bold text-gray-900 mb-3">交渉文をそのまま送信</h3>
+                    <p class="text-gray-600 mb-8 leading-relaxed">角が立たない、プロフェッショナルな交渉用テキストをコピーして担当者に送るだけ。</p>
+                    
+                    <div class="bg-gray-900 rounded-xl p-4 relative text-left">
+                        <div class="flex items-center space-x-2 mb-3">
+                            <div class="w-2.5 h-2.5 rounded-full bg-red-500"></div>
+                            <div class="w-2.5 h-2.5 rounded-full bg-yellow-500"></div>
+                            <div class="w-2.5 h-2.5 rounded-full bg-green-500"></div>
+                        </div>
+                        <p class="text-sm text-gray-300 leading-relaxed font-mono">
+                            「オプションBを外した場合の<br>お見積りをお願いできますか？」
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 6 Comparison -->
+    <section class="py-24 bg-white">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16 fade-up">
+                <h2 class="text-3xl font-bold text-gray-900 mb-4">SmartChoiceならではのアプローチ。</h2>
+                <p class="text-lg text-gray-600">業者探しをする「前」に、まずは冷静に適正価格を知ることができます。</p>
+            </div>
+
+            <div class="overflow-x-auto fade-up" style="transition-delay: 100ms;">
+                <table class="w-full text-left border-collapse border border-gray-100 rounded-xl overflow-hidden shadow-sm">
+                    <thead>
+                        <tr class="bg-gray-50">
+                            <th class="p-4 border-b border-gray-200 text-gray-500 font-medium w-1/3"></th>
+                            <th class="p-4 border-b border-gray-200 font-bold text-gray-900 w-1/3">一般的な見積もりサービス</th>
+                            <th class="p-4 border-b border-primary font-bold text-primary w-1/3 bg-blue-50/50">SmartChoice</th>
+                        </tr>
+                    </thead>
+                    <tbody class="text-sm sm:text-base">
+                        <tr>
+                            <td class="p-4 border-b border-gray-100 text-gray-700 font-medium">目的</td>
+                            <td class="p-4 border-b border-gray-100 text-gray-600">業者の紹介・手配</td>
+                            <td class="p-4 border-b border-gray-100 text-gray-900 font-bold bg-blue-50/30">見積もりの妥当性チェック</td>
+                        </tr>
+                        <tr>
+                            <td class="p-4 border-b border-gray-100 text-gray-700 font-medium">業者との連絡</td>
+                            <td class="p-4 border-b border-gray-100 text-gray-600">見積もり依頼時に必要</td>
+                            <td class="p-4 border-b border-gray-100 text-gray-900 font-bold bg-blue-50/30">一切なし（AIが即時判定）</td>
+                        </tr>
+                        <tr>
+                            <td class="p-4 border-b border-gray-100 text-gray-700 font-medium">項目の精査</td>
+                            <td class="p-4 border-b border-gray-100 text-gray-600">総額での比較が中心</td>
+                            <td class="p-4 border-b border-gray-100 text-gray-900 font-bold bg-blue-50/30">内訳レベルでAIが細かく判定</td>
+                        </tr>
+                        <tr>
+                            <td class="p-4 border-b border-gray-100 text-gray-700 font-medium">交渉のサポート</td>
+                            <td class="p-4 border-b border-gray-100 text-gray-600">基本的にお客様ご自身で対応</td>
+                            <td class="p-4 border-b border-gray-100 text-gray-900 font-bold bg-blue-50/30">コピペ用文章を自動生成</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
+    <!-- 7 Philosophy -->
+    <section class="py-32 bg-gray-900 text-white relative overflow-hidden" id="philosophy">
+        <div class="absolute inset-0 opacity-10 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-primary via-gray-900 to-gray-900"></div>
+        <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10 fade-up">
+            <h2 class="text-3xl sm:text-4xl font-bold mb-10 leading-tight">私たちは、<br>安さだけを追い求めません。</h2>
+            
+            <div class="space-y-6 text-lg text-gray-300 leading-relaxed font-medium">
+                <p>良い「物」や、良い「者（プロフェッショナル）」には、正当な価値があります。</p>
+                <p>安全・品質維持に不可欠な費用や、真っ当な技術料を削ることは、最終的にあなた自身の損につながります。</p>
+                <p>SmartChoiceは、無闇に値切るための「もの」ではありません。</p>
+                <p>知識不足につけこんだ過剰な提案や、無意味なオプションを見抜き、<br class="hidden sm:block">あなたが「納得して選ぶ」ためのWebツールです。</p>
+            </div>
+            
+            <p class="mt-16 text-2xl font-bold text-white tracking-widest">
+                良いものを、適正価格で。
+            </p>
+        </div>
+    </section>
+
+    <!-- 8 Use Cases -->
+    <section class="py-24 bg-section">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16 fade-up">
+                <h2 class="text-3xl font-bold text-gray-900 mb-4">あらゆる「見積もり」に対応。</h2>
+            </div>
+            
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 fade-up" style="transition-delay: 100ms;">
+                <div class="bg-white p-6 rounded-2xl text-center shadow-sm border border-gray-100 flex items-center justify-center">
+                    <span class="block text-gray-800 font-medium">住宅</span>
+                </div>
+                <div class="bg-white p-6 rounded-2xl text-center shadow-sm border border-gray-100 flex items-center justify-center">
+                    <span class="block text-gray-800 font-medium">リフォーム</span>
+                </div>
+                <div class="bg-white p-6 rounded-2xl text-center shadow-sm border border-gray-100 flex items-center justify-center">
+                    <span class="block text-gray-800 font-medium">保険</span>
+                </div>
+                <div class="bg-white p-6 rounded-2xl text-center shadow-sm border border-gray-100 flex items-center justify-center">
+                    <span class="block text-gray-800 font-medium">自動車</span>
+                </div>
+                <div class="bg-white p-6 rounded-2xl text-center shadow-sm border border-gray-100 flex items-center justify-center">
+                    <span class="block text-gray-800 font-medium">引越し</span>
+                </div>
+                <div class="bg-white p-6 rounded-2xl text-center shadow-sm border border-gray-100 flex items-center justify-center">
+                    <span class="block text-gray-800 font-medium">契約全般</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 9 FAQ -->
+    <section class="py-24 bg-white" id="faq">
+        <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16 fade-up">
+                <h2 class="text-3xl font-bold text-gray-900">よくあるご質問</h2>
+            </div>
+
+            <div class="space-y-4 fade-up" style="transition-delay: 100ms;">
+                <!-- Accordion Item 1 -->
+                <div class="border border-gray-200 rounded-2xl overflow-hidden bg-white">
+                    <button class="w-full px-6 py-4 text-left flex justify-between items-center focus:outline-none focus-visible:bg-gray-50 hover:bg-gray-50 transition" onclick="toggleFaq(this)" aria-expanded="false">
+                        <span class="font-medium text-gray-900">AIの判定精度はどのくらいですか？</span>
+                        <i data-lucide="chevron-down" class="w-5 h-5 text-gray-400 transition-transform duration-300 transform"></i>
+                    </button>
+                    <div class="px-6 pb-4 hidden text-gray-600 leading-relaxed text-sm">
+                        最新の言語モデルを使用し、市場の適正相場データと照らし合わせて判定を行います。不確定な情報は推測せず「要確認」と提示するため、高い信頼性を保っています。最終的な判断の材料としてご活用ください。
+                    </div>
+                </div>
+
+                <!-- Accordion Item 2 -->
+                <div class="border border-gray-200 rounded-2xl overflow-hidden bg-white">
+                    <button class="w-full px-6 py-4 text-left flex justify-between items-center focus:outline-none focus-visible:bg-gray-50 hover:bg-gray-50 transition" onclick="toggleFaq(this)" aria-expanded="false">
+                        <span class="font-medium text-gray-900">見積書をアップロードしても安全ですか？</span>
+                        <i data-lucide="chevron-down" class="w-5 h-5 text-gray-400 transition-transform duration-300 transform"></i>
+                    </button>
+                    <div class="px-6 pb-4 hidden text-gray-600 leading-relaxed text-sm">
+                        はい、安全です。アップロードされた画像やテキストはAIの解析のみに使用され、解析完了後にサーバーから速やかに破棄されます。
+                    </div>
+                </div>
+
+                <!-- Accordion Item 3 -->
+                <div class="border border-gray-200 rounded-2xl overflow-hidden bg-white">
+                    <button class="w-full px-6 py-4 text-left flex justify-between items-center focus:outline-none focus-visible:bg-gray-50 hover:bg-gray-50 transition" onclick="toggleFaq(this)" aria-expanded="false">
+                        <span class="font-medium text-gray-900">利用料金はかかりますか？</span>
+                        <i data-lucide="chevron-down" class="w-5 h-5 text-gray-400 transition-transform duration-300 transform"></i>
+                    </button>
+                    <div class="px-6 pb-4 hidden text-gray-600 leading-relaxed text-sm">
+                        SmartChoiceの基本機能は完全無料でご利用いただけます。私たちは「情報格差をなくす」ことを目的としており、消費者の皆様に負担をかけることはありません。
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 10 Final CTA -->
+    <section class="py-24 bg-section" id="cta">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center fade-up">
+            <h2 class="text-4xl font-bold text-gray-900 mb-6">次の大きな買い物の前に。</h2>
+            <p class="text-xl text-gray-600 mb-10">AIが、あなたの「納得」をサポートします。</p>
+            <a href="https://smart-choice.onrender.com/" target="_blank" class="inline-flex items-center justify-center px-10 py-4 border border-transparent text-lg font-bold rounded-full text-white bg-primary hover:bg-secondary shadow-xl hover:shadow-2xl hover:-translate-y-1 transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-primary">
+                無料で始める
+            </a>
+            <p class="mt-6 text-sm text-gray-500">※会員登録不要で今すぐ試せます</p>
+            <p class="mt-1 text-[11px] text-gray-400">※システムの都合上、アプリの起動までに10～20秒ほどかかる場合がございます。</p>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-white border-t border-gray-200 py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div class="mb-4 md:mb-0">
+                    <span class="text-xl font-bold tracking-tight text-gray-900">SmartChoice</span>
+                </div>
+                <div class="flex space-x-6 text-sm text-gray-500">
+                    <a href="#" class="hover:text-gray-900 transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded">利用規約</a>
+                    <a href="#" class="hover:text-gray-900 transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded">プライバシーポリシー</a>
+                    <a href="#" class="hover:text-gray-900 transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded">運営会社</a>
+                </div>
+            </div>
+            <div class="mt-12 pt-8 border-t border-gray-100">
+                <div class="text-[11px] text-gray-400 leading-relaxed mb-8 max-w-5xl mx-auto">
+                    <span class="font-bold block mb-1">【免責事項】</span>
+                    当サイトのAI診断結果は、AIによる自動分析（Web検索結果を含む）に基づくシミュレーションであり、その正確性・完全性・最新性を保証するものではありません。相場情報は変動する可能性があり、実際の適正価格と異なる場合があります。当サイトのご利用により生じたいかなるトラブルや損害についても、運営者は一切の責任を負いかねます。最終的なご判断はお客様ご自身の責任で行っていただき、重要な契約・取引の前には専門家への相談を推奨します。
+                </div>
+                <div class="text-center text-sm text-gray-400">
+                    &copy; 2026 SmartChoice. All rights reserved.
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Drawer Overlay -->
+    <div id="drawer-overlay" class="fixed inset-0 bg-gray-900/50 backdrop-blur-sm z-[60] opacity-0 pointer-events-none transition-opacity duration-300"></div>
+    
+    <!-- Drawer Menu -->
+    <div id="drawer-menu" class="fixed top-0 right-0 h-full w-80 max-w-[85vw] bg-white z-[70] transform translate-x-full transition-transform duration-300 shadow-2xl overflow-y-auto">
+        <div class="p-6">
+            <div class="flex justify-end mb-6">
+                <button id="close-menu-btn" class="text-gray-500 hover:text-gray-800 p-2 rounded-full hover:bg-gray-100 transition focus:outline-none focus-visible:ring-2 focus-visible:ring-primary" aria-label="メニューを閉じる">
+                    <i data-lucide="x" class="w-6 h-6"></i>
+                </button>
+            </div>
+            
+            <div class="space-y-8">
+                <!-- About SmartChoice -->
+                <div>
+                    <h4 class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-3">SmartChoiceについて</h4>
+                    <p class="text-sm text-gray-600 leading-relaxed mb-4">
+                        悪質なぼったくりからあなたを守り、無駄なお金を払わずに済むように助けてくれるお助けアプリです。AIが見積もりを分析し、最適な選択をサポートします。
+                    </p>
+                    <a href="https://smart-choice.onrender.com/" target="_blank" class="flex items-center justify-center w-full py-3 bg-primary text-white text-sm font-bold rounded-xl shadow hover:bg-secondary transition focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-primary">
+                        無料で試してみる
+                        <i data-lucide="external-link" class="w-4 h-4 ml-2"></i>
+                    </a>
+                </div>
+
+                <!-- Tips / Secret Use Case -->
+                <div class="bg-blue-50/50 rounded-2xl p-5 border border-blue-100">
+                    <div class="flex items-center mb-3">
+                        <i data-lucide="lightbulb" class="w-5 h-5 text-yellow-500 mr-2"></i>
+                        <h4 class="text-sm font-bold text-gray-900">裏技的活用法💡</h4>
+                    </div>
+                    <p class="text-[13px] text-gray-700 leading-relaxed mb-3">
+                        実は、SmartChoiceで調べられるのは「モノ・サービス」だけではありません。<br>
+                        <strong>就職・転職時の給与相場</strong>のチェックなどにも活用できます！
+                    </p>
+                    <div class="bg-white rounded-xl p-3 border border-gray-100 text-xs text-gray-600 space-y-2">
+                        <div class="flex"><span class="font-bold text-primary mr-2">1.</span><span>ジャンルを「その他（テキスト入力）」に設定</span></div>
+                        <div class="flex"><span class="font-bold text-primary mr-2">2.</span><span>内容に「看護師」、金額に「総支給額30万円」等と入力</span></div>
+                        <div class="flex"><span class="font-bold text-primary mr-2">3.</span><span>解析スタート！</span></div>
+                    </div>
+                    <p class="text-[11px] text-gray-500 mt-3 leading-relaxed">
+                        「AIからの特記事項」から業界のおおよその相場金額を知ることができます。ぜひご活用ください。
+                    </p>
+                </div>
+
+                <!-- Share Options -->
+                <div>
+                    <h4 class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-3">このページをシェア</h4>
+                    <div class="space-y-2">
+                        <button class="copy-url-btn w-full flex items-center p-3 text-sm font-medium text-gray-700 bg-gray-50 rounded-xl hover:bg-gray-100 transition focus:outline-none focus-visible:ring-2 focus-visible:ring-primary" data-url="https://smart-choice.onrender.com/">
+                            <div class="w-8 h-8 rounded-full bg-white flex items-center justify-center mr-3 shadow-sm text-gray-500"><i data-lucide="link" class="w-4 h-4"></i></div>
+                            URLをコピー
+                        </button>
+                        <a href="https://line.me/R/msg/text/?https://smart-choice.onrender.com/" target="_blank" class="w-full flex items-center p-3 text-sm font-medium text-gray-700 bg-gray-50 rounded-xl hover:bg-green-50 transition focus:outline-none focus-visible:ring-2 focus-visible:ring-green-500 group">
+                            <div class="w-8 h-8 rounded-full bg-[#06C755] flex items-center justify-center mr-3 shadow-sm text-white"><i data-lucide="message-circle" class="w-4 h-4"></i></div>
+                            LINEで共有
+                        </a>
+                        <a href="sms:?body=https://smart-choice.onrender.com/" class="w-full flex items-center p-3 text-sm font-medium text-gray-700 bg-gray-50 rounded-xl hover:bg-blue-50 transition focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500">
+                            <div class="w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center mr-3 shadow-sm text-white"><i data-lucide="message-square" class="w-4 h-4"></i></div>
+                            SMSで共有
+                        </a>
+                        <button id="qr-btn" class="w-full flex items-center p-3 text-sm font-medium text-gray-700 bg-gray-50 rounded-xl hover:bg-gray-100 transition focus:outline-none focus-visible:ring-2 focus-visible:ring-primary">
+                            <div class="w-8 h-8 rounded-full bg-white flex items-center justify-center mr-3 shadow-sm text-gray-800"><i data-lucide="qr-code" class="w-4 h-4"></i></div>
+                            QRコードで共有
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- QR Code Modal -->
+    <div id="qr-modal" class="fixed inset-0 bg-gray-900/60 backdrop-blur-sm z-[80] opacity-0 pointer-events-none transition-opacity duration-300 flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl shadow-2xl p-8 max-w-sm w-full text-center transform scale-95 transition-transform duration-300" id="qr-modal-content">
+            <h3 class="text-xl font-bold text-gray-900 mb-2">QRコード</h3>
+            <p class="text-sm text-gray-500 mb-6">カメラで読み取ってアクセス</p>
+            <div class="bg-gray-50 p-4 rounded-2xl inline-block mb-6 border border-gray-100">
+                <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=https://smart-choice.onrender.com/" alt="SmartChoice QR Code" class="w-48 h-48 mx-auto">
+            </div>
+            <button id="close-qr-btn" class="w-full py-3 bg-gray-100 text-gray-800 font-bold rounded-xl hover:bg-gray-200 transition focus:outline-none focus-visible:ring-2 focus-visible:ring-gray-400">
+                閉じる
+            </button>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="fixed bottom-4 left-1/2 transform -translate-x-1/2 bg-gray-900 text-white px-6 py-3 rounded-full shadow-2xl flex items-center space-x-2 z-[90] transition-all duration-300 opacity-0 translate-y-full pointer-events-none" aria-live="polite">
+        <i data-lucide="check-circle-2" class="w-5 h-5 text-success"></i>
+        <span class="text-sm font-medium">コピーしました</span>
+    </div>
+
+    <!-- Scripts -->
+    <script>
+        // Drawer & Modal Logic
+        const menuBtn = document.getElementById('menu-btn');
+        const closeMenuBtn = document.getElementById('close-menu-btn');
+        const drawerOverlay = document.getElementById('drawer-overlay');
+        const drawerMenu = document.getElementById('drawer-menu');
+        
+        const qrBtn = document.getElementById('qr-btn');
+        const closeQrBtn = document.getElementById('close-qr-btn');
+        const qrModal = document.getElementById('qr-modal');
+        const qrModalContent = document.getElementById('qr-modal-content');
+
+        function openDrawer() {
+            drawerOverlay.classList.remove('opacity-0', 'pointer-events-none');
+            drawerMenu.classList.remove('translate-x-full');
+        }
+
+        function closeDrawer() {
+            drawerOverlay.classList.add('opacity-0', 'pointer-events-none');
+            drawerMenu.classList.add('translate-x-full');
+        }
+
+        if(menuBtn) menuBtn.addEventListener('click', openDrawer);
+        if(closeMenuBtn) closeMenuBtn.addEventListener('click', closeDrawer);
+        if(drawerOverlay) drawerOverlay.addEventListener('click', closeDrawer);
+
+        function openQrModal() {
+            closeDrawer();
+            qrModal.classList.remove('opacity-0', 'pointer-events-none');
+            qrModalContent.classList.remove('scale-95');
+        }
+
+        function closeQrModal() {
+            qrModal.classList.add('opacity-0', 'pointer-events-none');
+            qrModalContent.classList.add('scale-95');
+        }
+
+        if(qrBtn) qrBtn.addEventListener('click', openQrModal);
+        if(closeQrBtn) closeQrBtn.addEventListener('click', closeQrModal);
+        if(qrModal) qrModal.addEventListener('click', (e) => {
+            if (e.target === qrModal) closeQrModal();
+        });
+
+        // Dynamic Share URLs (Use LP's actual URL)
+        document.addEventListener('DOMContentLoaded', () => {
+            const currentUrl = encodeURIComponent(window.location.href);
+            const rawUrl = window.location.href;
+            
+            const lineShare = document.querySelector('a[href^="https://line.me/R/msg/text/"]');
+            if(lineShare) lineShare.href = `https://line.me/R/msg/text/?${currentUrl}`;
+            
+            const smsShare = document.querySelector('a[href^="sms:?body="]');
+            if(smsShare) smsShare.href = `sms:?body=${currentUrl}`;
+            
+            const copyBtn = document.querySelector('.copy-url-btn');
+            if(copyBtn) copyBtn.setAttribute('data-url', rawUrl);
+            
+            const qrImg = document.querySelector('#qr-modal-content img');
+            if(qrImg) qrImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${currentUrl}`;
+        });
+
+        // Share URL Copy Logic
+        document.querySelectorAll('.copy-url-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const url = btn.getAttribute('data-url');
+                navigator.clipboard.writeText(url).then(() => {
+                    toast.classList.add('show');
+                    toast.style.opacity = '1';
+                    toast.style.transform = 'translate(-50%, 0)';
+                    
+                    const originalHtml = btn.innerHTML;
+                    btn.innerHTML = '<div class="w-8 h-8 rounded-full bg-green-500 flex items-center justify-center mr-3 shadow-sm text-white"><i data-lucide="check" class="w-4 h-4"></i></div><span>コピー完了</span>';
+                    lucide.createIcons();
+                    
+                    clearTimeout(toastTimeout);
+                    toastTimeout = setTimeout(() => {
+                        toast.classList.remove('show');
+                        toast.style.opacity = '0';
+                        toast.style.transform = 'translate(-50%, 100%)';
+                        btn.innerHTML = originalHtml;
+                        lucide.createIcons();
+                    }, 2000);
+                });
+            });
+        });
+        // Initialize Lucide Icons
+        lucide.createIcons();
+
+        // Sticky Navbar Glass Effect
+        const nav = document.querySelector('nav');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 10) {
+                nav.classList.add('premium-shadow');
+            } else {
+                nav.classList.remove('premium-shadow');
+            }
+        });
+
+        // Intersection Observer for Fade Up Animations
+        const observerOptions = {
+            root: null,
+            rootMargin: '0px',
+            threshold: 0.1
+        };
+
+        const observer = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    // Stop observing once animated
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.fade-up').forEach(el => {
+            observer.observe(el);
+        });
+
+        // FAQ Accordion Toggle
+        function toggleFaq(button) {
+            const content = button.nextElementSibling;
+            const icon = button.querySelector('i');
+            const isOpen = !content.classList.contains('hidden');
+
+            // Close all other open FAQs
+            document.querySelectorAll('#faq .hidden').forEach(el => {
+                if (el !== content && !el.classList.contains('hidden')) {
+                    el.classList.add('hidden');
+                    el.previousElementSibling.setAttribute('aria-expanded', 'false');
+                    el.previousElementSibling.querySelector('i').style.transform = 'rotate(0deg)';
+                }
+            });
+
+            if (isOpen) {
+                content.classList.add('hidden');
+                button.setAttribute('aria-expanded', 'false');
+                icon.style.transform = 'rotate(0deg)';
+            } else {
+                content.classList.remove('hidden');
+                button.setAttribute('aria-expanded', 'true');
+                icon.style.transform = 'rotate(180deg)';
+            }
+        }
+
+        // Copy to Clipboard & Toast
+        const toast = document.getElementById('toast');
+        let toastTimeout;
+
+        document.querySelectorAll('.copy-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.preventDefault();
+                const text = btn.getAttribute('data-clipboard-text');
+                
+                navigator.clipboard.writeText(text).then(() => {
+                    // Show Toast
+                    toast.classList.add('show');
+                    toast.style.opacity = '1';
+                    toast.style.transform = 'translate(-50%, 0)';
+                    
+                    // Button Feedback
+                    const originalHtml = btn.innerHTML;
+                    btn.innerHTML = '<i data-lucide="check" class="w-4 h-4"></i><span>コピー完了</span>';
+                    lucide.createIcons();
+                    
+                    clearTimeout(toastTimeout);
+                    toastTimeout = setTimeout(() => {
+                        toast.classList.remove('show');
+                        toast.style.opacity = '0';
+                        toast.style.transform = 'translate(-50%, 100%)';
+                        btn.innerHTML = originalHtml;
+                        lucide.createIcons();
+                    }, 2000);
+                });
+            });
+        });
+    </script>
+</body>
+</html>
