@@ -150,7 +150,7 @@
                         <div class="absolute top-0 inset-x-0 h-7 bg-gray-900 rounded-b-3xl w-40 mx-auto z-20"></div>
                         <!-- App Header -->
                         <div class="bg-white pt-12 pb-4 px-6 border-b border-gray-100 flex justify-center items-center">
-                            <span class="text-lg font-bold text-gray-900">見積もり分析</span>
+                            <span class="text-lg font-bold text-gray-900">スマホ修理の分析</span>
                         </div>
                         <!-- App Content -->
                         <div class="flex-1 p-5 bg-gray-50 overflow-hidden space-y-4">
@@ -213,45 +213,56 @@
             </div>
             
             <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4 md:gap-6 fade-up" style="transition-delay: 100ms;">
-                <div class="bg-gray-50 rounded-2xl p-6 text-center border border-gray-100 hover:border-gray-200 hover:shadow-md transition-all">
-                    <i data-lucide="monitor" class="w-8 h-8 mx-auto text-gray-400 mb-3" aria-hidden="true"></i>
-                    <span class="text-sm font-medium text-gray-700">家電</span>
+                <!-- スマホ修理 (Highlighted) -->
+                <div class="bg-blue-50 rounded-2xl p-6 text-center border-2 border-primary hover:shadow-lg transition-all transform hover:-translate-y-1 relative">
+                    <div class="absolute -top-3 -right-3 bg-red-500 text-white text-[10px] font-bold px-3 py-1 rounded-full shadow-sm animate-pulse">最注目!</div>
+                    <i data-lucide="smartphone" class="w-8 h-8 mx-auto text-primary mb-3" aria-hidden="true"></i>
+                    <span class="text-sm font-bold text-primary">スマホ修理・購入</span>
                 </div>
+                <!-- プロパンガス -->
+                <div class="bg-orange-50/30 rounded-2xl p-6 text-center border border-orange-100 hover:border-orange-200 hover:shadow-md transition-all">
+                    <i data-lucide="flame" class="w-8 h-8 mx-auto text-orange-500 mb-3" aria-hidden="true"></i>
+                    <span class="text-sm font-medium text-gray-800">プロパンガス</span>
+                </div>
+                <!-- 電気料金 -->
+                <div class="bg-yellow-50/30 rounded-2xl p-6 text-center border border-yellow-100 hover:border-yellow-200 hover:shadow-md transition-all">
+                    <i data-lucide="zap" class="w-8 h-8 mx-auto text-yellow-500 mb-3" aria-hidden="true"></i>
+                    <span class="text-sm font-medium text-gray-800">電気料金</span>
+                </div>
+                <!-- リフォーム -->
                 <div class="bg-gray-50 rounded-2xl p-6 text-center border border-gray-100 hover:border-gray-200 hover:shadow-md transition-all">
                     <i data-lucide="hammer" class="w-8 h-8 mx-auto text-gray-400 mb-3" aria-hidden="true"></i>
                     <span class="text-sm font-medium text-gray-700">リフォーム</span>
                 </div>
-                <div class="bg-gray-50 rounded-2xl p-6 text-center border border-gray-100 hover:border-gray-200 hover:shadow-md transition-all">
+                <!-- 車検 -->
+                <div class="bg-gray-50 rounded-2xl p-6 text-center border border-gray-100 hover:border-gray-200 hover:shadow-md transition-all hidden lg:block">
                     <i data-lucide="car" class="w-8 h-8 mx-auto text-gray-400 mb-3" aria-hidden="true"></i>
-                    <span class="text-sm font-medium text-gray-700">車検</span>
+                    <span class="text-sm font-medium text-gray-700">車検・整備</span>
                 </div>
-                <div class="bg-gray-50 rounded-2xl p-6 text-center border border-gray-100 hover:border-gray-200 hover:shadow-md transition-all">
+                <!-- 保険 -->
+                <div class="bg-gray-50 rounded-2xl p-6 text-center border border-gray-100 hover:border-gray-200 hover:shadow-md transition-all hidden lg:block">
                     <i data-lucide="shield" class="w-8 h-8 mx-auto text-gray-400 mb-3" aria-hidden="true"></i>
                     <span class="text-sm font-medium text-gray-700">保険</span>
                 </div>
-                <div class="bg-gray-50 rounded-2xl p-6 text-center border border-gray-100 hover:border-gray-200 hover:shadow-md transition-all hidden lg:block">
-                    <i data-lucide="home" class="w-8 h-8 mx-auto text-gray-400 mb-3" aria-hidden="true"></i>
-                    <span class="text-sm font-medium text-gray-700">外壁塗装</span>
-                </div>
-                <div class="bg-gray-50 rounded-2xl p-6 text-center border border-gray-100 hover:border-gray-200 hover:shadow-md transition-all hidden lg:block">
-                    <i data-lucide="sofa" class="w-8 h-8 mx-auto text-gray-400 mb-3" aria-hidden="true"></i>
-                    <span class="text-sm font-medium text-gray-700">家具</span>
-                </div>
+                <!-- 引越し -->
                 <div class="bg-gray-50 rounded-2xl p-6 text-center border border-gray-100 hover:border-gray-200 hover:shadow-md transition-all hidden lg:block">
                     <i data-lucide="truck" class="w-8 h-8 mx-auto text-gray-400 mb-3" aria-hidden="true"></i>
                     <span class="text-sm font-medium text-gray-700">引越し</span>
                 </div>
+                <!-- 大型家電 -->
                 <div class="bg-gray-50 rounded-2xl p-6 text-center border border-gray-100 hover:border-gray-200 hover:shadow-md transition-all hidden lg:block">
-                    <i data-lucide="key" class="w-8 h-8 mx-auto text-gray-400 mb-3" aria-hidden="true"></i>
-                    <span class="text-sm font-medium text-gray-700">中古車</span>
+                    <i data-lucide="monitor" class="w-8 h-8 mx-auto text-gray-400 mb-3" aria-hidden="true"></i>
+                    <span class="text-sm font-medium text-gray-700">大型家電</span>
                 </div>
+                <!-- ネット回線 -->
                 <div class="bg-gray-50 rounded-2xl p-6 text-center border border-gray-100 hover:border-gray-200 hover:shadow-md transition-all hidden lg:block">
                     <i data-lucide="wifi" class="w-8 h-8 mx-auto text-gray-400 mb-3" aria-hidden="true"></i>
                     <span class="text-sm font-medium text-gray-700">ネット回線</span>
                 </div>
+                <!-- 不用品買取 -->
                 <div class="bg-gray-50 rounded-2xl p-6 text-center border border-gray-100 hover:border-gray-200 hover:shadow-md transition-all hidden lg:block">
-                    <i data-lucide="sun" class="w-8 h-8 mx-auto text-gray-400 mb-3" aria-hidden="true"></i>
-                    <span class="text-sm font-medium text-gray-700">太陽光</span>
+                    <i data-lucide="package-open" class="w-8 h-8 mx-auto text-gray-400 mb-3" aria-hidden="true"></i>
+                    <span class="text-sm font-medium text-gray-700">不用品買取</span>
                 </div>
             </div>
         </div>
@@ -388,23 +399,24 @@
             </div>
             
             <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 fade-up" style="transition-delay: 100ms;">
+                <div class="bg-blue-50 p-6 rounded-2xl text-center shadow-sm border-2 border-primary flex items-center justify-center relative">
+                    <div class="absolute -top-3 -right-3 bg-red-500 text-white text-[10px] font-bold px-2 py-1 rounded-full shadow-sm animate-pulse">最注目!</div>
+                    <span class="block text-primary font-bold">スマホ修理</span>
+                </div>
                 <div class="bg-white p-6 rounded-2xl text-center shadow-sm border border-gray-100 flex items-center justify-center">
-                    <span class="block text-gray-800 font-medium">住宅</span>
+                    <span class="block text-gray-800 font-medium">プロパンガス</span>
+                </div>
+                <div class="bg-white p-6 rounded-2xl text-center shadow-sm border border-gray-100 flex items-center justify-center">
+                    <span class="block text-gray-800 font-medium">電気料金</span>
                 </div>
                 <div class="bg-white p-6 rounded-2xl text-center shadow-sm border border-gray-100 flex items-center justify-center">
                     <span class="block text-gray-800 font-medium">リフォーム</span>
                 </div>
                 <div class="bg-white p-6 rounded-2xl text-center shadow-sm border border-gray-100 flex items-center justify-center">
-                    <span class="block text-gray-800 font-medium">保険</span>
-                </div>
-                <div class="bg-white p-6 rounded-2xl text-center shadow-sm border border-gray-100 flex items-center justify-center">
-                    <span class="block text-gray-800 font-medium">自動車</span>
+                    <span class="block text-gray-800 font-medium">車検・自動車</span>
                 </div>
                 <div class="bg-white p-6 rounded-2xl text-center shadow-sm border border-gray-100 flex items-center justify-center">
                     <span class="block text-gray-800 font-medium">引越し</span>
-                </div>
-                <div class="bg-white p-6 rounded-2xl text-center shadow-sm border border-gray-100 flex items-center justify-center">
-                    <span class="block text-gray-800 font-medium">契約全般</span>
                 </div>
             </div>
         </div>
