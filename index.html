@@ -215,7 +215,6 @@
             <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4 md:gap-6 fade-up" style="transition-delay: 100ms;">
                 <!-- スマホ修理 (Highlighted) -->
                 <div class="bg-blue-50 rounded-2xl p-6 text-center border-2 border-primary hover:shadow-lg transition-all transform hover:-translate-y-1 relative">
-                    <div class="absolute -top-3 -right-3 bg-red-500 text-white text-[10px] font-bold px-3 py-1 rounded-full shadow-sm animate-pulse">最注目!</div>
                     <i data-lucide="smartphone" class="w-8 h-8 mx-auto text-primary mb-3" aria-hidden="true"></i>
                     <span class="text-sm font-bold text-primary">スマホ修理・購入</span>
                 </div>
@@ -400,7 +399,6 @@
             
             <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 fade-up" style="transition-delay: 100ms;">
                 <div class="bg-blue-50 p-6 rounded-2xl text-center shadow-sm border-2 border-primary flex items-center justify-center relative">
-                    <div class="absolute -top-3 -right-3 bg-red-500 text-white text-[10px] font-bold px-2 py-1 rounded-full shadow-sm animate-pulse">最注目!</div>
                     <span class="block text-primary font-bold">スマホ修理</span>
                 </div>
                 <div class="bg-white p-6 rounded-2xl text-center shadow-sm border border-gray-100 flex items-center justify-center">
@@ -492,8 +490,8 @@
                     <span class="text-xl font-bold tracking-tight text-gray-900">SmartChoice</span>
                 </div>
                 <div class="flex space-x-6 text-sm text-gray-500">
-                    <a href="#" class="hover:text-gray-900 transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded">利用規約</a>
-                    <a href="#" class="hover:text-gray-900 transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded">プライバシーポリシー</a>
+                    <a href="#" id="terms-btn" class="hover:text-gray-900 transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded">利用規約</a>
+                    <a href="#" id="privacy-btn" class="hover:text-gray-900 transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded">プライバシーポリシー</a>
                     <a href="#" class="hover:text-gray-900 transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded">運営会社</a>
                 </div>
             </div>
@@ -580,6 +578,36 @@
         </div>
     </div>
 
+    <!-- Terms Modal -->
+    <div id="terms-modal" class="fixed inset-0 bg-gray-900/60 backdrop-blur-sm z-[80] opacity-0 pointer-events-none transition-opacity duration-300 flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl shadow-2xl p-8 max-w-lg w-full text-left transform scale-95 transition-transform duration-300 max-h-[90vh] overflow-y-auto" id="terms-modal-content">
+            <h3 class="text-xl font-bold text-gray-900 mb-6 border-b pb-2 border-gray-100">利用規約</h3>
+            <ol class="list-decimal list-outside ml-4 space-y-4 text-sm text-gray-700 leading-relaxed mb-8">
+                <li>本サービス（Smart Choice）が提供する相場情報や交渉スクリプトは、AIによる推定値であり、その正確性・完全性・有用性を保証するものではありません。</li>
+                <li>本サービスを利用して生じたいかなる損害（業者とのトラブル等）についても、運営者は一切の責任を負いません。最終的な交渉・契約の判断はユーザーご自身の責任において行ってください。</li>
+                <li>悪意を持った利用（意図的な虚偽データの送信、システムの破壊行為など）を禁止します。</li>
+            </ol>
+            <button id="close-terms-btn" class="w-full py-3 bg-gray-100 text-gray-800 font-bold rounded-xl hover:bg-gray-200 transition focus:outline-none focus-visible:ring-2 focus-visible:ring-gray-400">
+                閉じる
+            </button>
+        </div>
+    </div>
+
+    <!-- Privacy Modal -->
+    <div id="privacy-modal" class="fixed inset-0 bg-gray-900/60 backdrop-blur-sm z-[80] opacity-0 pointer-events-none transition-opacity duration-300 flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl shadow-2xl p-8 max-w-lg w-full text-left transform scale-95 transition-transform duration-300 max-h-[90vh] overflow-y-auto" id="privacy-modal-content">
+            <h3 class="text-xl font-bold text-gray-900 mb-6 border-b pb-2 border-gray-100">プライバシーポリシー</h3>
+            <ol class="list-decimal list-outside ml-4 space-y-4 text-sm text-gray-700 leading-relaxed mb-8">
+                <li>ユーザーがアップロードした画像およびテキストデータは、相場分析の目的のみに使用され、AIによる解析完了後にサーバーから速やかに破棄されます。</li>
+                <li>個人を特定できる情報（氏名、詳細な住所、電話番号等）は分析に不要ですので、送信前にマスキング（黒塗り）等を行っていただくことを推奨します。</li>
+                <li>本サービスは、利便性向上のために過去の履歴をユーザーの端末内（ブラウザのローカルストレージ）にのみ保存します。サーバー側で履歴を収集・監視することはありません。</li>
+            </ol>
+            <button id="close-privacy-btn" class="w-full py-3 bg-gray-100 text-gray-800 font-bold rounded-xl hover:bg-gray-200 transition focus:outline-none focus-visible:ring-2 focus-visible:ring-gray-400">
+                閉じる
+            </button>
+        </div>
+    </div>
+
     <!-- QR Code Modal -->
     <div id="qr-modal" class="fixed inset-0 bg-gray-900/60 backdrop-blur-sm z-[80] opacity-0 pointer-events-none transition-opacity duration-300 flex items-center justify-center p-4">
         <div class="bg-white rounded-3xl shadow-2xl p-8 max-w-sm w-full text-center transform scale-95 transition-transform duration-300" id="qr-modal-content">
@@ -643,6 +671,34 @@
         if(qrModal) qrModal.addEventListener('click', (e) => {
             if (e.target === qrModal) closeQrModal();
         });
+
+        // Policy Modals Logic
+        const termsBtn = document.getElementById('terms-btn');
+        const privacyBtn = document.getElementById('privacy-btn');
+        const termsModal = document.getElementById('terms-modal');
+        const privacyModal = document.getElementById('privacy-modal');
+        const termsContent = document.getElementById('terms-modal-content');
+        const privacyContent = document.getElementById('privacy-modal-content');
+        const closeTermsBtn = document.getElementById('close-terms-btn');
+        const closePrivacyBtn = document.getElementById('close-privacy-btn');
+
+        function openPolicyModal(modal, content) {
+            closeDrawer(); // DrawMenuが開いていたら閉じる
+            modal.classList.remove('opacity-0', 'pointer-events-none');
+            content.classList.remove('scale-95');
+        }
+        function closePolicyModal(modal, content) {
+            modal.classList.add('opacity-0', 'pointer-events-none');
+            content.classList.add('scale-95');
+        }
+
+        if(termsBtn) termsBtn.addEventListener('click', (e) => { e.preventDefault(); openPolicyModal(termsModal, termsContent); });
+        if(privacyBtn) privacyBtn.addEventListener('click', (e) => { e.preventDefault(); openPolicyModal(privacyModal, privacyContent); });
+        if(closeTermsBtn) closeTermsBtn.addEventListener('click', () => closePolicyModal(termsModal, termsContent));
+        if(closePrivacyBtn) closePrivacyBtn.addEventListener('click', () => closePolicyModal(privacyModal, privacyContent));
+        
+        if(termsModal) termsModal.addEventListener('click', (e) => { if(e.target === termsModal) closePolicyModal(termsModal, termsContent); });
+        if(privacyModal) privacyModal.addEventListener('click', (e) => { if(e.target === privacyModal) closePolicyModal(privacyModal, privacyContent); });
 
         // Dynamic Share URLs (Use LP's actual URL)
         document.addEventListener('DOMContentLoaded', () => {
