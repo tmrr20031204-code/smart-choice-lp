@@ -10,8 +10,10 @@
     <meta property="og:type" content="website">
     <meta property="og:title" content="SmartChoice | 良いものを、適正価格で。">
     <meta property="og:description" content="AIが相場を分析し、見積もり・契約・価格交渉までサポート。">
+    <meta property="og:image" content="icon.png">
     <meta name="twitter:card" content="summary_large_image">
-    <link rel="canonical" href="https://example.com/">
+    <link rel="icon" href="icon.png" type="image/png">
+    <link rel="apple-touch-icon" href="icon.png">
     
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -69,17 +71,11 @@
         @media (prefers-reduced-motion: no-preference) {
             .fade-up { opacity: 0; transform: translateY(24px); transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1), transform 0.7s cubic-bezier(0.16, 1, 0.3, 1); }
             .fade-up.visible { opacity: 1; transform: translateY(0); }
-            .fade-in { opacity: 0; transition: opacity 0.7s ease-out; }
-            .fade-in.visible { opacity: 1; }
         }
         
         /* Custom Utilities */
         .premium-shadow { box-shadow: 0 20px 40px -15px rgba(0,0,0,0.05); }
         .text-gradient { background: linear-gradient(to right, #2563EB, #4F46E5); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        
-        /* Toast */
-        #toast { transition: opacity 0.3s, transform 0.3s; transform: translateY(100%); opacity: 0; }
-        #toast.show { transform: translateY(0); opacity: 1; }
     </style>
 </head>
 <body class="antialiased selection:bg-primary selection:text-white">
@@ -492,7 +488,6 @@
                 <div class="flex space-x-6 text-sm text-gray-500">
                     <a href="#" id="terms-btn" class="hover:text-gray-900 transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded">利用規約</a>
                     <a href="#" id="privacy-btn" class="hover:text-gray-900 transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded">プライバシーポリシー</a>
-                    <a href="#" class="hover:text-gray-900 transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded">運営会社</a>
                 </div>
             </div>
             <div class="mt-12 pt-8 border-t border-gray-100">
@@ -543,8 +538,8 @@
                         <strong>就職・転職時の給与相場</strong>のチェックなどにも活用できます！
                     </p>
                     <div class="bg-white rounded-xl p-3 border border-gray-100 text-xs text-gray-600 space-y-2">
-                        <div class="flex"><span class="font-bold text-primary mr-2">1.</span><span>ジャンルを「その他（テキスト入力）」に設定</span></div>
-                        <div class="flex"><span class="font-bold text-primary mr-2">2.</span><span>内容に「看護師」、金額に「総支給額30万円」等と入力</span></div>
+                        <div class="flex"><span class="font-bold text-primary mr-2">1.</span><span>ジャンルを「その他」にし、「⌨️ テキストで解析」を選択</span></div>
+                        <div class="flex"><span class="font-bold text-primary mr-2">2.</span><span>見積もり内容・金額に「看護師 総支給額30万円」等と入力</span></div>
                         <div class="flex"><span class="font-bold text-primary mr-2">3.</span><span>解析スタート！</span></div>
                     </div>
                     <p class="text-[11px] text-gray-500 mt-3 leading-relaxed">
@@ -614,7 +609,7 @@
             <h3 class="text-xl font-bold text-gray-900 mb-2">QRコード</h3>
             <p class="text-sm text-gray-500 mb-6">カメラで読み取ってアクセス</p>
             <div class="bg-gray-50 p-4 rounded-2xl inline-block mb-6 border border-gray-100">
-                <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=https://smart-choice.onrender.com/" alt="SmartChoice QR Code" class="w-48 h-48 mx-auto">
+                <img id="qr-code-img" data-src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=https://smart-choice.onrender.com/" alt="SmartChoice QR Code" class="w-48 h-48 mx-auto">
             </div>
             <button id="close-qr-btn" class="w-full py-3 bg-gray-100 text-gray-800 font-bold rounded-xl hover:bg-gray-200 transition focus:outline-none focus-visible:ring-2 focus-visible:ring-gray-400">
                 閉じる
@@ -657,6 +652,10 @@
 
         function openQrModal() {
             closeDrawer();
+            const qrImg = document.getElementById('qr-code-img');
+            if (qrImg && !qrImg.getAttribute('src')) {
+                qrImg.src = qrImg.getAttribute('data-src');
+            }
             qrModal.classList.remove('opacity-0', 'pointer-events-none');
             qrModalContent.classList.remove('scale-95');
         }
@@ -714,34 +713,45 @@
             const copyBtn = document.querySelector('.copy-url-btn');
             if(copyBtn) copyBtn.setAttribute('data-url', rawUrl);
             
-            const qrImg = document.querySelector('#qr-modal-content img');
-            if(qrImg) qrImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${currentUrl}`;
+            const qrImg = document.getElementById('qr-code-img');
+            if(qrImg) qrImg.setAttribute('data-src', `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${currentUrl}`);
         });
+
+        // Copy to Clipboard & Toast Common Helper
+        const toast = document.getElementById('toast');
+        let toastTimeout;
+
+        function triggerCopyFeedback(btn, textToCopy, copiedHtml) {
+            navigator.clipboard.writeText(textToCopy).then(() => {
+                toast.classList.remove('opacity-0', 'translate-y-full');
+                toast.classList.add('opacity-100', 'translate-y-0');
+                
+                const originalHtml = btn.innerHTML;
+                btn.innerHTML = copiedHtml;
+                lucide.createIcons();
+                
+                clearTimeout(toastTimeout);
+                toastTimeout = setTimeout(() => {
+                    toast.classList.remove('opacity-100', 'translate-y-0');
+                    toast.classList.add('opacity-0', 'translate-y-full');
+                    btn.innerHTML = originalHtml;
+                    lucide.createIcons();
+                }, 2000);
+            });
+        }
 
         // Share URL Copy Logic
         document.querySelectorAll('.copy-url-btn').forEach(btn => {
             btn.addEventListener('click', () => {
                 const url = btn.getAttribute('data-url');
-                navigator.clipboard.writeText(url).then(() => {
-                    toast.classList.add('show');
-                    toast.style.opacity = '1';
-                    toast.style.transform = 'translate(-50%, 0)';
-                    
-                    const originalHtml = btn.innerHTML;
-                    btn.innerHTML = '<div class="w-8 h-8 rounded-full bg-green-500 flex items-center justify-center mr-3 shadow-sm text-white"><i data-lucide="check" class="w-4 h-4"></i></div><span>コピー完了</span>';
-                    lucide.createIcons();
-                    
-                    clearTimeout(toastTimeout);
-                    toastTimeout = setTimeout(() => {
-                        toast.classList.remove('show');
-                        toast.style.opacity = '0';
-                        toast.style.transform = 'translate(-50%, 100%)';
-                        btn.innerHTML = originalHtml;
-                        lucide.createIcons();
-                    }, 2000);
-                });
+                triggerCopyFeedback(
+                    btn,
+                    url,
+                    '<div class="w-8 h-8 rounded-full bg-green-500 flex items-center justify-center mr-3 shadow-sm text-white"><i data-lucide="check" class="w-4 h-4"></i></div><span>コピー完了</span>'
+                );
             });
         });
+
         // Initialize Lucide Icons
         lucide.createIcons();
 
@@ -783,11 +793,13 @@
             const isOpen = !content.classList.contains('hidden');
 
             // Close all other open FAQs
-            document.querySelectorAll('#faq .hidden').forEach(el => {
-                if (el !== content && !el.classList.contains('hidden')) {
-                    el.classList.add('hidden');
-                    el.previousElementSibling.setAttribute('aria-expanded', 'false');
-                    el.previousElementSibling.querySelector('i').style.transform = 'rotate(0deg)';
+            document.querySelectorAll('#faq button[aria-expanded="true"]').forEach(otherBtn => {
+                if (otherBtn !== button) {
+                    const otherContent = otherBtn.nextElementSibling;
+                    const otherIcon = otherBtn.querySelector('i');
+                    if (otherContent) otherContent.classList.add('hidden');
+                    otherBtn.setAttribute('aria-expanded', 'false');
+                    if (otherIcon) otherIcon.style.transform = 'rotate(0deg)';
                 }
             });
 
@@ -802,35 +814,16 @@
             }
         }
 
-        // Copy to Clipboard & Toast
-        const toast = document.getElementById('toast');
-        let toastTimeout;
-
+        // Mockup Script Copy Button
         document.querySelectorAll('.copy-btn').forEach(btn => {
             btn.addEventListener('click', (e) => {
                 e.preventDefault();
                 const text = btn.getAttribute('data-clipboard-text');
-                
-                navigator.clipboard.writeText(text).then(() => {
-                    // Show Toast
-                    toast.classList.add('show');
-                    toast.style.opacity = '1';
-                    toast.style.transform = 'translate(-50%, 0)';
-                    
-                    // Button Feedback
-                    const originalHtml = btn.innerHTML;
-                    btn.innerHTML = '<i data-lucide="check" class="w-4 h-4"></i><span>コピー完了</span>';
-                    lucide.createIcons();
-                    
-                    clearTimeout(toastTimeout);
-                    toastTimeout = setTimeout(() => {
-                        toast.classList.remove('show');
-                        toast.style.opacity = '0';
-                        toast.style.transform = 'translate(-50%, 100%)';
-                        btn.innerHTML = originalHtml;
-                        lucide.createIcons();
-                    }, 2000);
-                });
+                triggerCopyFeedback(
+                    btn,
+                    text,
+                    '<i data-lucide="check" class="w-4 h-4"></i><span>コピー完了</span>'
+                );
             });
         });
     </script>
